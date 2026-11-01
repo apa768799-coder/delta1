@@ -41,23 +41,20 @@ public class RenderUtils {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
 
-        // Проверка на существование RenderSystem (на всякий случай)
         try {
             RenderSystem.setShader(GameRenderer::getPositionColorProgram);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
         } catch (Exception e) {
-            // Если RenderSystem недоступен, пропускаем рендер, чтобы не крашить
+            // Если RenderSystem недоступен в этой сборке, пропускаем рендер
             return; 
         }
 
         buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        // Нижняя грань
         buf.vertex(model, (float)box.minX, (float)box.minY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.minY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.minY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.minX, (float)box.minY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
-        // Верхняя грань
         buf.vertex(model, (float)box.minX, (float)box.maxY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.maxY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.maxY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
