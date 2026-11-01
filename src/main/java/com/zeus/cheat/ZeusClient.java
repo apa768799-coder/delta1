@@ -55,8 +55,9 @@ public class ZeusClient implements ClientModInitializer {
             }
         });
 
-        HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
-            hudManager.render(matrices, tickDelta);
+        // ИСПРАВЛЕНО: ctx вместо matrices
+        HudRenderCallback.EVENT.register((ctx, tickDelta) -> {
+            hudManager.render(ctx, tickDelta);
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread(configManager::save));
