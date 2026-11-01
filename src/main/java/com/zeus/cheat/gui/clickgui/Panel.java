@@ -1,8 +1,8 @@
-// Замени только метод render в Panel.java на этот, чтобы добавить градиент
+// Замени метод render в файле Panel.java на этот
 public void render(DrawContext ctx, int mx, int my) {
     int headerColor = isHovered(mx, my) ? 0xFF2A2A2A : 0xFF1A1A1A;
     ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), headerColor);
-    // Линия снизу заголовка
+    // Линия снизу заголовка для красоты
     ctx.fill((int)x, (int)(y+height-1), (int)(x+width), (int)(y+height), 0xFF00AAAA);
     
     ctx.drawText(ZeusClient.mc.textRenderer, category.displayName, (int)x + 5, (int)y + 5, 0xFFFFFFFF, true);
