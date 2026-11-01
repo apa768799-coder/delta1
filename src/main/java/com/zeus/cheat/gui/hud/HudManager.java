@@ -3,14 +3,12 @@ package com.zeus.cheat.gui.hud;
 import com.zeus.cheat.ZeusClient;
 import com.zeus.cheat.module.Module;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HudManager {
-    public void render(MatrixStack matrices, float delta) {
-        DrawContext ctx = new DrawContext(ZeusClient.mc, ZeusClient.mc.getBufferBuilders().getEntityVertexConsumers());
+    public void render(DrawContext ctx, float delta) {
         renderArrayList(ctx);
         renderWatermark(ctx);
     }
