@@ -22,21 +22,27 @@ public class Tracers extends Module {
     @EventListener
     public void onRender(EventRender3D e) {
         if (mc.world == null) return;
+        
         MatrixStack matrices = e.getMatrices();
         matrices.push();
-        matrices.translate(-mc.getEntityRenderDispatcher().camera.getPos().x, 
-                           -mc.getEntityRenderDispatcher().camera.getPos().y, 
-                           -mc.getEntityRenderDispatcher().camera.getPos().z);
+        matrices.translate(
+            -mc.getEntityRenderDispatcher().camera.getPos().x, 
+            -mc.getEntityRenderDispatcher().camera.getPos().y, 
+            -mc.getEntityRenderDispatcher().camera.getPos().z
+        );
 
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
+        
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        
         buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
         for (Entity ent : mc.world.getEntities()) {
             if (ent == mc.player) continue;
+            
             int color = (ent instanceof PlayerEntity) ? 0xFFFF5555 : 0xFFFFFF55;
             float a = ((color >> 24) & 0xFF) / 255f;
             float r = ((color >> 16) & 0xFF) / 255f;
@@ -49,6 +55,7 @@ public class Tracers extends Module {
             buf.vertex(model, (float)mc.player.getX(), (float)(mc.player.getY() + mc.player.getEyeHeight(mc.player.getPose())), (float)mc.player.getZ()).color(r, g, b, a).next();
             buf.vertex(model, (float)pos.x, (float)pos.y, (float)pos.z).color(r, g, b, a).next();
         }
+        
         tess.draw();
         RenderSystem.disableBlend();
         matrices.pop();
