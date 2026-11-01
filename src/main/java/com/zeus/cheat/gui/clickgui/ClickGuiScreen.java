@@ -21,13 +21,16 @@ public class ClickGuiScreen extends Screen {
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        // Затемнение фона
         ctx.fill(0, 0, width, height, 0x88000000);
         for (Panel p : panels) p.render(ctx, mouseX, mouseY);
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        for (Panel p : panels) if (p.mouseClicked(x, y, button)) return true;
+        for (Panel p : panels) {
+            if (p.mouseClicked(x, y, button)) return true;
+        }
         return super.mouseClicked(x, y, button);
     }
 
@@ -39,14 +42,34 @@ public class ClickGuiScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double x, double y, int button, double dx, double dy) {
-        for (Panel p : panels) if (p.mouseDragged(x, y, button, dx, dy)) return true;
+        for (Panel p : panels) {
+            if (p.mouseDragged(x, y, button, dx, dy)) return true;
+        }
         return super.mouseDragged(x, y, button, dx, dy);
     }
 
     @Override
     public boolean mouseScrolled(double x, double y, double hAmount, double vAmount) {
-        for (Panel p : panels) if (p.mouseScrolled(x, y, vAmount)) return true;
+        for (Panel p : panels) {
+            if (p.mouseScrolled(x, y, vAmount)) return true;
+        }
         return super.mouseScrolled(x, y, hAmount, vAmount);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // Пробрасываем нажатия клавиш в кнопки модулей для биндинга
+        for (Panel p : panels) {
+            for (ModuleButton b : p.buttons) {
+                if (b.keyPressed(keyCode, scanCode, modifiers)) return true;
+            }
+        }
+        // ESC закрывает меню
+        if (keyCode == 256) { // GLFW_KEY_ESCAPE
+            close();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
