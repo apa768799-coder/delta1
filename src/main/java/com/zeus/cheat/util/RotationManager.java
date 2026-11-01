@@ -28,7 +28,7 @@ public class RotationManager {
         float deltaYaw = MathHelper.wrapDegrees(targetYaw - currentYaw);
         float deltaPitch = MathHelper.wrapDegrees(targetPitch - currentPitch);
         
-        // Плавный поворот (можно настроить скорость)
+        // Плавный поворот (настраиваемая скорость)
         float smoothFactor = 0.2f; 
         float newYaw = currentYaw + deltaYaw * smoothFactor;
         float newPitch = currentPitch + deltaPitch * smoothFactor;
