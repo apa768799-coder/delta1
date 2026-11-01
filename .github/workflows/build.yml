@@ -24,10 +24,10 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       with:
-        gradle-version: 8.5 # Используем версию, которая указана в логах вашей сборки
+        gradle-version: 8.11 # Обязательно 8.11+ для Loom 1.9
 
     - name: Generate Gradle Wrapper
-      run: gradle wrapper --gradle-version 8.5
+      run: gradle wrapper --gradle-version 8.11
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -39,5 +39,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: zeus-cheat-mod
-        path: build/libs/*.jar   # <--- ИСПРАВЛЕНИЕ ЗДЕСЬ
+        path: build/libs/*.jar
         if-no-files-found: error
