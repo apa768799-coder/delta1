@@ -60,7 +60,7 @@ public class KillAura extends Module {
         double bestDist = range.get().doubleValue();
         for (Entity ent : mc.world.getEntities()) {
             if (!(ent instanceof LivingEntity) || ent == mc.player) continue;
-            if (!ent.isAlive() || ent.isInvisible()) continue; // Исправлено
+            if (!ent.isAlive() || ent.isInvisible()) continue;
             if (ent instanceof PlayerEntity && !players.get()) continue;
             if (!(ent instanceof PlayerEntity) && !mobs.get()) continue;
             
