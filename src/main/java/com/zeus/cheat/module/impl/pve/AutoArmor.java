@@ -18,13 +18,14 @@ public class AutoArmor extends Module {
         for (int i = 0; i < 4; i++) {
             ItemStack current = mc.player.getInventory().getArmorStack(i);
             int bestSlot = -1;
-            int bestVal = current.isEmpty() ? -1 : ((ArmorItem) current.getItem()).getMaterial().getDefense();
+            int bestVal = current.isEmpty() ? -1 : getDefenseValue(current);
 
             for (int j = 9; j < 45; j++) {
                 ItemStack stack = mc.player.getInventory().getStack(j);
                 if (stack.getItem() instanceof ArmorItem armor) {
-                    if (armor.getSlotType() == mc.player.getInventory().getArmorStack(i).getItem().getSlotType()) {
-                        int val = armor.getMaterial().getDefense();
+                    // Исправлено: getType().getId() вместо getSlotType()
+                    if (armor.getType().getId() == i) { 
+                        int val = getDefenseValue(stack);
                         if (val > bestVal) {
                             bestVal = val;
                             bestSlot = j;
@@ -32,12 +33,21 @@ public class AutoArmor extends Module {
                     }
                 }
             }
+            
             if (bestSlot != -1) {
-                int targetSlot = 3 - i + 36;
+                int targetSlot = 3 - i + 36; 
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, bestSlot, 0, SlotActionType.PICKUP, mc.player);
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, targetSlot, 0, SlotActionType.PICKUP, mc.player);
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, bestSlot, 0, SlotActionType.PICKUP, mc.player);
             }
         }
+    }
+
+    private int getDefenseValue(ItemStack stack) {
+        if (stack.getItem() instanceof ArmorItem armor) {
+            // Исправлено: getProtection() вместо getDefense() или getProtectionAmount()
+            return armor.getMaterial().getProtection(); 
+        }
+        return 0;
     }
 }
