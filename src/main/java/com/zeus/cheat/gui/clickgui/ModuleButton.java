@@ -4,35 +4,59 @@ import com.zeus.cheat.ZeusClient;
 import com.zeus.cheat.module.Module;
 import com.zeus.cheat.value.*;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleButton {
     public final Module module;
-    public double x, y, width, height = 16;
+    public double x, y, width, height = 18;
     public boolean extended;
     private final List<SettingComponent> components = new ArrayList<>();
+    private boolean binding = false;
+    private long hoverTime = 0;
 
     public ModuleButton(Module m, double x, double y, double w, double h) {
         this.module = m; this.x = x; this.y = y; this.width = w; this.height = h;
         double cy = y + h;
         for (Value<?> v : m.getValues()) {
             SettingComponent c;
-            if (v instanceof BoolValue)        c = new SettingComponent.BoolComp((BoolValue) v, x, cy, w, 14);
-            else if (v instanceof NumberValue) c = new SettingComponent.NumberComp((NumberValue) v, x, cy, w, 14);
-            else if (v instanceof ListValue)   c = new SettingComponent.ListComp((ListValue) v, x, cy, w, 14);
+            if (v instanceof BoolValue) c = new SettingComponent.BoolComp((BoolValue) v, x, cy, w, 16);
+            else if (v instanceof NumberValue) c = new SettingComponent.NumberComp((NumberValue) v, x, cy, w, 16);
+            else if (v instanceof ListValue) c = new SettingComponent.ListComp((ListValue) v, x, cy, w, 16);
             else continue;
             components.add(c);
-            cy += 14;
+            cy += 16;
         }
     }
 
     public void render(DrawContext ctx, int mx, int my) {
-        boolean hov = isHovered(mx, my);
-        int bg = module.isEnabled() ? 0xFF2A4A6A : (hov ? 0xFF333333 : 0xFF1A1A1A);
-        ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), bg);
-        int text = module.isEnabled() ? 0xFF55FFFF : 0xFFCCCCCC;
-        ctx.drawText(ZeusClient.mc.textRenderer, module.getName(), (int)x + 4, (int)y + 4, text, true);
+        boolean hovered = isHovered(mx, my);
+        if (hovered) hoverTime = System.currentTimeMillis();
+        
+        // Динамический цвет фона
+        int bgColor;
+        if (module.isEnabled()) {
+            bgColor = 0xFF2A4A6A; // Активный синий
+        } else if (hovered) {
+            bgColor = 0xFF333333; // Ховер серый
+        } else {
+            bgColor = 0xFF1A1A1A; // Обычный темный
+        }
+
+        ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), bgColor);
+        
+        // Текст модуля
+        String text = module.getName();
+        if (module.getKey() != 0 && !binding) {
+            text += " §7[" + InputUtil.fromKeyCode(module.getKey(), 0).getLocalizedText().getString() + "]";
+        } else if (binding) {
+            text += " §e[Press Key...]";
+        }
+        
+        int textColor = module.isEnabled() ? 0xFFFFFFFF : 0xFFCCCCCC;
+        ctx.drawText(ZeusClient.mc.textRenderer, text, (int)x + 5, (int)y + 5, textColor, true);
 
         if (!extended) return;
         double cy = y + height;
@@ -41,6 +65,8 @@ public class ModuleButton {
             c.render(ctx, mx, my);
             cy += c.height;
         }
+        // Фон для открытых настроек
+        ctx.fill((int)x, (int)(y+height), (int)(x+width), (int)cy, 0xCC111111);
     }
 
     public double getHeight() {
@@ -52,11 +78,29 @@ public class ModuleButton {
 
     public boolean mouseClicked(double mx, double my, int btn) {
         if (isHovered(mx, my)) {
-            if (btn == 0) module.toggle();
-            else if (btn == 1 && !components.isEmpty()) extended = !extended;
-            return true;
+            if (btn == 0) {
+                if (binding) binding = false;
+                else module.toggle();
+                return true;
+            } else if (btn == 1) {
+                binding = true;
+                return true;
+            } else if (btn == 2 && !components.isEmpty()) {
+                extended = !extended;
+                return true;
+            }
         }
         if (extended) for (SettingComponent c : components) if (c.mouseClicked(mx, my, btn)) return true;
+        return false;
+    }
+
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (binding) {
+            if (keyCode == GLFW.GLFW_KEY_ESCAPE) module.setKey(0);
+            else module.setKey(keyCode);
+            binding = false;
+            return true;
+        }
         return false;
     }
 
