@@ -39,18 +39,19 @@ public class RenderUtils {
         RenderSystem.defaultBlendFunc();
 
         buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        // Нижняя грань
         buf.vertex(model, (float)box.minX, (float)box.minY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.minY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.minY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.minX, (float)box.minY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
-
+        // Верхняя грань
         buf.vertex(model, (float)box.minX, (float)box.maxY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.maxY, (float)box.maxZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.maxX, (float)box.maxY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         buf.vertex(model, (float)box.minX, (float)box.maxY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         tess.draw();
 
-        // edges
+        // Ребра
         buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         line(buf, model, box.minX, box.minY, box.minZ, box.maxX, box.minY, box.minZ, r, g, b, a);
         line(buf, model, box.maxX, box.minY, box.minZ, box.maxX, box.minY, box.maxZ, r, g, b, a);
@@ -69,10 +70,7 @@ public class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    private static void line(BufferBuilder buf, Matrix4f m,
-                             double x1, double y1, double z1,
-                             double x2, double y2, double z2,
-                             float r, float g, float b, float a) {
+    private static void line(BufferBuilder buf, Matrix4f m, double x1, double y1, double z1, double x2, double y2, double z2, float r, float g, float b, float a) {
         buf.vertex(m, (float)x1, (float)y1, (float)z1).color(r, g, b, a).next();
         buf.vertex(m, (float)x2, (float)y2, (float)z2).color(r, g, b, a).next();
     }
