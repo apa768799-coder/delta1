@@ -18,14 +18,12 @@ public abstract class SettingComponent {
         }
         public void render(DrawContext ctx, int mx, int my) {
             ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), 0xFF1A1A1A);
-            int bx = (int)(x + width - 12), by = (int)y + 2;
-            ctx.fill(bx, by, bx+10, by+10, value.get() ? 0xFF55FFFF : 0xFF444444);
-            ctx.drawText(ZeusClient.mc.textRenderer, value.getName(), (int)x + 4, (int)y + 3, 0xFFCCCCCC, true);
+            int bx = (int)(x + width - 14), by = (int)y + 2;
+            ctx.fill(bx, by, bx+12, by+12, value.get() ? 0xFF00AAAA : 0xFF444444);
+            ctx.drawText(ZeusClient.mc.textRenderer, value.getName(), (int)x + 4, (int)y + 4, 0xFFDDDDDD, true);
         }
         public boolean mouseClicked(double mx, double my, int btn) {
-            if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
-                value.set(!value.get()); return true;
-            }
+            if (mx >= x && mx <= x + width && my >= y && my <= y + height) { value.set(!value.get()); return true; }
             return false;
         }
     }
@@ -37,18 +35,14 @@ public abstract class SettingComponent {
         }
         public void render(DrawContext ctx, int mx, int my) {
             ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), 0xFF1A1A1A);
-            double pct = (value.get().doubleValue() - value.min.doubleValue())
-                       / (value.max.doubleValue() - value.min.doubleValue());
-            int sx = (int)(x + 2), sy = (int)(y + height - 3);
-            ctx.fill(sx, sy, (int)(x+width-2), sy+1, 0xFF333333);
-            ctx.fill(sx, sy, (int)(sx + (width-4)*pct), sy+1, 0xFF55FFFF);
-            ctx.drawText(ZeusClient.mc.textRenderer,
-                value.getName() + ": " + value.get(), (int)x + 4, (int)y + 2, 0xFFCCCCCC, true);
+            double pct = (value.get().doubleValue() - value.min.doubleValue()) / (value.max.doubleValue() - value.min.doubleValue());
+            int sx = (int)(x + 2), sy = (int)(y + height - 4);
+            ctx.fill(sx, sy, (int)(x+width-2), sy+2, 0xFF333333);
+            ctx.fill(sx, sy, (int)(sx + (width-4)*pct), sy+2, 0xFF00AAAA);
+            ctx.drawText(ZeusClient.mc.textRenderer, value.getName() + ": " + value.get(), (int)x + 4, (int)y + 3, 0xFFDDDDDD, true);
         }
         public boolean mouseClicked(double mx, double my, int btn) {
-            if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
-                dragging = true; update(mx); return true;
-            }
+            if (mx >= x && mx <= x + width && my >= y && my <= y + height) { dragging = true; update(mx); return true; }
             return false;
         }
         public boolean mouseDragged(double mx, double my, int btn, double dx, double dy) {
@@ -75,13 +69,10 @@ public abstract class SettingComponent {
         }
         public void render(DrawContext ctx, int mx, int my) {
             ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), 0xFF1A1A1A);
-            ctx.drawText(ZeusClient.mc.textRenderer,
-                value.getName() + ": " + value.get(), (int)x + 4, (int)y + 3, 0xFFCCCCCC, true);
+            ctx.drawText(ZeusClient.mc.textRenderer, value.getName() + ": " + value.get(), (int)x + 4, (int)y + 4, 0xFFDDDDDD, true);
         }
         public boolean mouseClicked(double mx, double my, int btn) {
-            if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
-                value.increment(); return true;
-            }
+            if (mx >= x && mx <= x + width && my >= y && my <= y + height) { value.increment(); return true; }
             return false;
         }
     }
