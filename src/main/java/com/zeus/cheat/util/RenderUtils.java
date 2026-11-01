@@ -1,7 +1,12 @@
 package com.zeus.cheat.util;
 
 import com.zeus.cheat.ZeusClient;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderSystem;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
@@ -50,7 +55,6 @@ public class RenderUtils {
         buf.vertex(model, (float)box.minX, (float)box.maxY, (float)box.minZ).color(r, g, b, a * 0.3f).next();
         tess.draw();
 
-        // edges
         buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         line(buf, model, box.minX, box.minY, box.minZ, box.maxX, box.minY, box.minZ, r, g, b, a);
         line(buf, model, box.maxX, box.minY, box.minZ, box.maxX, box.minY, box.maxZ, r, g, b, a);
