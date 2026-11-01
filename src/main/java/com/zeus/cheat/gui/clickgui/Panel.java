@@ -10,7 +10,7 @@ import java.util.List;
 public class Panel {
     public final Category category;
     public double x, y, width, height;
-    private final List<ModuleButton> buttons = new ArrayList<>();
+    public final List<ModuleButton> buttons = new ArrayList<>(); // СДЕЛАНО PUBLIC
     public boolean extended = true;
     private boolean dragging;
     private double dragX, dragY;
@@ -25,10 +25,8 @@ public class Panel {
     }
 
     public void render(DrawContext ctx, int mx, int my) {
-        // Заголовок панели
         int headerColor = isHovered(mx, my) ? 0xFF2A2A2A : 0xFF1A1A1A;
         ctx.fill((int)x, (int)y, (int)(x+width), (int)(y+height), headerColor);
-        // Декоративная линия снизу
         ctx.fill((int)x, (int)(y+height-1), (int)(x+width), (int)(y+height), 0xFF00AAAA);
         
         ctx.drawText(ZeusClient.mc.textRenderer, category.displayName, (int)x + 5, (int)y + 5, 0xFFFFFFFF, true);
@@ -41,7 +39,6 @@ public class Panel {
             b.render(ctx, mx, my);
             by += b.getHeight();
         }
-        // Фон для открытых настроек
         ctx.fill((int)x, (int)(y+height), (int)(x+width), (int)by, 0xAA000000);
     }
 
@@ -54,46 +51,28 @@ public class Panel {
 
     public boolean mouseClicked(double mx, double my, int btn) {
         if (isHovered(mx, my) && btn == 0) { 
-            dragging = true; 
-            dragX = mx - x; 
-            dragY = my - y; 
-            return true; 
+            dragging = true; dragX = mx - x; dragY = my - y; return true; 
         }
-        if (isHovered(mx, my) && btn == 1) { 
-            extended = !extended; 
-            return true; 
-        }
+        if (isHovered(mx, my) && btn == 1) { extended = !extended; return true; }
         if (extended) {
-            for (ModuleButton b : buttons) {
-                if (b.mouseClicked(mx, my, btn)) return true;
-            }
+            for (ModuleButton b : buttons) if (b.mouseClicked(mx, my, btn)) return true;
         }
         return false;
     }
 
-    public void mouseReleased(double mx, double my, int btn) { 
-        dragging = false; 
-    }
+    public void mouseReleased(double mx, double my, int btn) { dragging = false; }
 
     public boolean mouseDragged(double mx, double my, int btn, double dx, double dy) {
-        if (dragging) { 
-            x = mx - dragX; 
-            y = my - dragY; 
-            return true; 
-        }
+        if (dragging) { x = mx - dragX; y = my - dragY; return true; }
         if (extended) {
-            for (ModuleButton b : buttons) {
-                if (b.mouseDragged(mx, my, btn, dx, dy)) return true;
-            }
+            for (ModuleButton b : buttons) if (b.mouseDragged(mx, my, btn, dx, dy)) return true;
         }
         return false;
     }
 
     public boolean mouseScrolled(double mx, double my, double amt) {
         if (extended) {
-            for (ModuleButton b : buttons) {
-                if (b.mouseScrolled(mx, my, amt)) return true;
-            }
+            for (ModuleButton b : buttons) if (b.mouseScrolled(mx, my, amt)) return true;
         }
         return false;
     }
