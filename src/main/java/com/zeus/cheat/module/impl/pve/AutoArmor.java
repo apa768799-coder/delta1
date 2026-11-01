@@ -1,23 +1,24 @@
 package com.zeus.cheat.module.impl.pve;
 
-// Убедитесь, что импорты соответствуют вашей базе (Module, Category)
 import com.zeus.cheat.module.Module;
-import com.zeus.cheat.module.Category;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
 
+// ВАЖНО: Если в вашем проекте используется аннотация для задания имени и категории,
+// например @ModuleInfo(name = "AutoArmor", category = Category.PVE), раскомментируйте её.
+// public class AutoArmor extends Module {
 public class AutoArmor extends Module {
 
-    // Конструктор, если в вашей базе он отличается — подправьте
     public AutoArmor() {
-        super("AutoArmor", Category.PVE);
+        // Конструктор оставлен пустым, так как базовый класс Module не принимает аргументов.
     }
 
-    @Override
-    public void onTick() {
+    // Если в базовом классе метод называется onTick(), замените onUpdate на onTick.
+    // Если он вообще не переопределяется, просто оставьте как есть.
+    public void onUpdate() {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.player == null || mc.interactionManager == null) return;
 
@@ -26,7 +27,7 @@ public class AutoArmor extends Module {
             ItemStack stack = mc.player.getInventory().getStack(i);
             
             if (stack.getItem() instanceof ArmorItem armor) {
-                // ИСПРАВЛЕНИЕ 1: Используем getEquipmentSlot().getEntitySlotId() вместо getId()
+                // ИСПРАВЛЕНИЕ 1: В 1.21.4 нет метода getId(), используем getEquipmentSlot().getEntitySlotId()
                 int armorSlotId = armor.getType().getEquipmentSlot().getEntitySlotId();
                 
                 EquipmentSlot equipSlot = armor.getType().getEquipmentSlot();
@@ -34,20 +35,18 @@ public class AutoArmor extends Module {
 
                 // Если новая броня лучше текущей — надеваем
                 if (shouldEquip(stack, currentArmor)) {
-                    // Слоты брони в инвентаре: 36 (ботинки), 37 (штаны), 38 (нагрудник), 39 (шлем)
+                    // Слоты брони в инвентаре игрока: 36 (ботинки), 37 (штаны), 38 (нагрудник), 39 (шлем)
                     int targetSlot = 36 + armorSlotId;
                     
-                    // Если предмет в хотбаре (0-8), используем SWAP, иначе PICKUP
-                    if (i < 9) {
+                    if (i < 9) { // Если предмет в хотбаре
                         mc.interactionManager.clickSlot(
                                 mc.player.playerScreenHandler.syncId,
                                 targetSlot,
-                                i, // Индекс хотбара для SWAP
+                                i, 
                                 SlotActionType.SWAP,
                                 mc.player
                         );
-                    } else {
-                        // Для предметов из основного инвентаря - двойной клик (PICKUP)
+                    } else { // Если в основном инвентаре
                         mc.interactionManager.clickSlot(
                                 mc.player.playerScreenHandler.syncId,
                                 i,
@@ -76,12 +75,11 @@ public class AutoArmor extends Module {
         }
     }
 
-    // ИСПРАВЛЕНИЕ 2: Убираем getMaterial().getProtection(), так как в 1.21+ метод вызывается напрямую у предмета
+    // ИСПРАВЛЕНИЕ 2: Вызываем getProtection() напрямую у предмета
     private int getProtection(ArmorItem armor) {
         return armor.getProtection();
     }
 
-    // Вспомогательный метод для сравнения брони
     private boolean shouldEquip(ItemStack newArmorStack, ItemStack currentArmorStack) {
         if (currentArmorStack.isEmpty()) return true;
         if (!(currentArmorStack.getItem() instanceof ArmorItem currentArmorItem)) return true;
