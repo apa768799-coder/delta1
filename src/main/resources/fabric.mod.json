@@ -2,17 +2,30 @@
   "schemaVersion": 1,
   "id": "zeus-cheat",
   "version": "${version}",
-  "name": "Zeus",
-  "description": "Zeus Client",
-  "authors": ["Zeus"],
+  "name": "Zeus Cheat",
+  "description": "Minecraft 1.21.4 utility mod.",
+  "authors": [
+    "apa768799-coder"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
   "license": "MIT",
+  "icon": "assets/zeus-cheat/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["com.zeus.cheat.ZeusClient"]
+    "client": [
+      "com.zeus.cheat.ZeusCheat"
+    ]
   },
- "depends": {
-  "fabricloader": ">=0.16.10",
-  "minecraft": ">=1.21.4",
-  "java": ">=21",
-  "fabric-api": "*"
+  "mixins": [
+    "zeus-cheat.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
 }
