@@ -9,7 +9,6 @@ import com.zeus.cheat.module.impl.pve.AutoTotem;
 import com.zeus.cheat.module.impl.render.ESP;
 import com.zeus.cheat.module.impl.render.FullBright;
 import com.zeus.cheat.module.impl.visuals.Nametags;
-import com.zeus.cheat.module.impl.visuals.Tracers;
 import com.zeus.cheat.module.impl.world.AutoMine;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class ModuleManager {
         // Visuals & Render
         register(new ESP());
         register(new FullBright());
-        register(new Tracers());
         register(new Nametags());
 
         // World
