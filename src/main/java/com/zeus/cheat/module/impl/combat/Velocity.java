@@ -16,7 +16,7 @@ public class Velocity extends Module {
     @EventListener
     public void onPacket(EventPacket e) {
         if (!(e.getPacket() instanceof EntityVelocityUpdateS2CPacket p)) return;
-        if (p.getId() != mc.player.getId()) return; // Исправлено
+        if (p.getId() != mc.player.getId()) return; 
         
         double h = horizontal.get().doubleValue() / 100.0;
         double v = vertical.get().doubleValue() / 100.0;
