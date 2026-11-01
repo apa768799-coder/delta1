@@ -8,7 +8,6 @@ public class RotationManager {
     public static void sendRotation(float newYaw, float newPitch) {
         if (ZeusClient.mc.player == null || ZeusClient.mc.getNetworkHandler() == null) return;
         
-        // ИСПРАВЛЕНИЕ: добавлен 4-й аргумент (false) для horizontalCollision
         ZeusClient.mc.getNetworkHandler().sendPacket(
             new PlayerMoveC2SPacket.LookAndOnGround(
                 newYaw, 
