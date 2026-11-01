@@ -6,6 +6,7 @@ import com.zeus.cheat.event.impl.EventTick;
 import com.zeus.cheat.gui.clickgui.ClickGuiScreen;
 import com.zeus.cheat.gui.hud.HudManager;
 import com.zeus.cheat.module.ModuleManager;
+import com.zeus.cheat.util.RotationManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -51,11 +52,12 @@ public class ZeusClient implements ClientModInitializer {
                 client.setScreen(new ClickGuiScreen());
             }
             if (client.player != null && client.world != null) {
+                // Умная ротация для всех модулей
+                RotationManager.onUpdate();
                 eventBus.post(new EventTick());
             }
         });
 
-        // ИСПРАВЛЕНО: ctx вместо matrices
         HudRenderCallback.EVENT.register((ctx, tickDelta) -> {
             hudManager.render(ctx, tickDelta);
         });
